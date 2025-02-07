@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import Webcam from 'react-webcam';
 
 import Head from 'next/head';
@@ -20,6 +20,7 @@ const Home = () => {
 
   const [isWebcamReady, setIsWebcamReady] = useState(false);
   const [image, setImage] = useState();
+  const [cldData, setCldData] = useState();
 
   const videoConstraints = {
     width: {
@@ -40,6 +41,22 @@ const Home = () => {
     }
   }
 
+  useEffect(() => {
+    if (!image) return;
+
+    (async function run() {
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: JSON.stringify({
+          image
+        })
+      }).then(r => r.json());
+      console.log('response', response);
+
+      setCldData(response);
+    })();
+  }, [image])
+
   return (
     <Layout>
       <Head>
@@ -54,7 +71,7 @@ const Home = () => {
           <div className={styles.stageContainer}>
             <div className={styles.stage}>
               {image && (
-                <img src={image} />
+                <img src={cldData?.secure_url || image} />
               )}
               {!image && (
                 <Webcam
