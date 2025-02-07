@@ -76,7 +76,7 @@ const Home = () => {
                 </Button>
               </li>
               <li>
-                <Button onclick={() => setImage(undefined)} color="red">
+                <Button onClick={() => setImage(undefined)} color="red">
                   Reset
                 </Button>
               </li>
