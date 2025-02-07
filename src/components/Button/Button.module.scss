@@ -1,0 +1,29 @@
+@use "sass:color";
+
+.button {
+
+  font-size: 1em;
+  color: white;
+  background-color: #9c5bc3;
+  border: 0;
+  font-weight: 900;
+  font-family: inherit;
+  text-transform: uppercase;
+  padding: .6em 1em;
+  border-radius: .2em;
+  cursor: pointer;
+
+  &:hover {
+    background-color: color.adjust(#9c5bc3, $lightness: 10%);
+  }
+
+  &[data-color="red"] {
+
+    background-color: #bc493a;
+
+    &:hover {
+      background-color: color.adjust(#bc493a, $lightness: 10%);
+    }
+  }
+
+}
