@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 
 import Head from 'next/head';
@@ -15,6 +16,11 @@ const Home = () => {
   const cameraHeight = 720;
   const aspectRatio = cameraWidth / cameraHeight;
   
+  const webcamRef = useRef(null);
+
+  const [isWebcamReady, setIsWebcamReady] = useState(false);
+  const [image, setImage] = useState();
+
   const videoConstraints = {
     width: {
       min: cameraWidth
@@ -24,6 +30,15 @@ const Home = () => {
     },
     aspectRatio
   };
+
+  function handleCaptureScreenshot() {
+    if (webcamRef.current) {
+      const imageSrc = webcamRef.current.getScreenshot();
+      setImage(imageSrc);
+    } else {
+      console.warn("Webcam is not ready yet")
+    }
+  }
 
   return (
     <Layout>
@@ -38,19 +53,30 @@ const Home = () => {
 
           <div className={styles.stageContainer}>
             <div className={styles.stage}>
-              <Webcam videoConstraints={videoConstraints} width={cameraWidth} height={cameraHeight} />
+              {image && (
+                <img src={image} />
+              )}
+              {!image && (
+                <Webcam
+                  ref = {webcamRef} 
+                  videoConstraints={videoConstraints} 
+                  width={cameraWidth} 
+                  height={cameraHeight} 
+                  onUserMedia={() => setIsWebcamReady(true)}
+                />
+              )}
             </div>
           </div>
 
           <div className={styles.controls}>
             <ul>
               <li>
-                <Button>
+                <Button onClick={handleCaptureScreenshot}>
                   Capture photo
                 </Button>
               </li>
               <li>
-                <Button color="red">
+                <Button onclick={() => setImage(undefined)} color="red">
                   Reset
                 </Button>
               </li>
